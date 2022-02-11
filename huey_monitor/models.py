@@ -47,8 +47,7 @@ class TaskModel(TimetrackingBaseModel):
         verbose_name=_('Parent Task'),
         help_text=_('Only set if this task is a sub task started from his parent.'),
     )
-    name = models.CharField(
-        max_length=128,
+    name = models.TextField(
         verbose_name=_('Task name'),
     )
     state = models.ForeignKey(
@@ -67,9 +66,7 @@ class TaskModel(TimetrackingBaseModel):
             ' (It does not mean that execution was successfully completed.)'
         ),
     )
-
-    desc = models.CharField(
-        max_length=64,
+    desc = models.TextField(
         default='',
         blank=True,
         verbose_name=_('Description'),
@@ -93,8 +90,7 @@ class TaskModel(TimetrackingBaseModel):
             ' (Will be done after the task has ended)'
         ),
     )
-    unit = models.CharField(
-        max_length=64,
+    unit = models.TextField(
         default='it',
         help_text=_('String that will be used to define the unit of each iteration'),
     )
@@ -204,9 +200,7 @@ class SignalInfoModel(models.Model):
         default=uuid.uuid4,
         editable=False,
     )
-
-    hostname = models.CharField(
-        max_length=128,
+    hostname = models.TextField(
         verbose_name=_('Hostname'),
         help_text=_('Hostname of the machine that creates this Signal'),
     )
@@ -214,12 +208,10 @@ class SignalInfoModel(models.Model):
         verbose_name=_('PID'),
         help_text=_('Process ID that creates this Signal'),
     )
-    thread = models.CharField(
-        max_length=128,
+    thread = models.TextField(
         verbose_name=_('Thread Name'),
         help_text=_('Name of the thread that creates this Signal'),
     )
-
     task = models.ForeignKey(
         'huey_monitor.TaskModel',
         on_delete=models.CASCADE,
@@ -227,13 +219,13 @@ class SignalInfoModel(models.Model):
         verbose_name=_('Task'),
         help_text=_('The Task instance for this Signal Info entry.'),
     )
-    signal_name = models.CharField(
-        max_length=128,
+    signal_name = models.TextField(
         verbose_name=_('Signal Name'),
         help_text=_('Name of the signal'),
     )
     exception_line = models.TextField(
-        max_length=128,
+        default='',
+        blank=True,
         verbose_name=_('Exception Line'),
     )
     exception = models.TextField(
