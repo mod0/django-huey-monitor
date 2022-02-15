@@ -7,13 +7,21 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('huey_monitor', '0001_initial'),
+        ("huey_monitor", "0001_initial"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='taskmodel',
-            name='state',
-            field=models.ForeignKey(blank=True, help_text='Last Signal information', null=True, on_delete=django.db.models.deletion.CASCADE, related_name='+', to='huey_monitor.signalinfomodel', verbose_name='State'),
+            model_name="taskmodel",
+            name="state",
+            field=models.ForeignKey(
+                blank=True,
+                help_text="Last Signal information",
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="+",
+                to="huey_monitor.signalinfomodel",
+                verbose_name="State",
+            ),
         ),
     ]

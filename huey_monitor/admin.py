@@ -25,53 +25,48 @@ class TaskModelAdmin(admin.ModelAdmin):
 
     def column_name(self, obj):
         qs = TaskModel.objects.filter(parent_task_id=obj.pk)
-        context = {
-            'main_task': obj,
-            'sub_tasks': qs
-        }
+        context = {"main_task": obj, "sub_tasks": qs}
         return render_to_string(
-            template_name='admin/huey_monitor/taskmodel/column_name.html',
+            template_name="admin/huey_monitor/taskmodel/column_name.html",
             context=context,
         )
 
-    column_name.short_description = _('Task name')
+    column_name.short_description = _("Task name")
 
     def task_hierarchy_info(self, obj):
         if obj.parent_task_id is not None:
             # This is a sub task
-            context = {
-                'main_task': TaskModel.objects.get(pk=obj.parent_task_id)
-            }
+            context = {"main_task": TaskModel.objects.get(pk=obj.parent_task_id)}
         else:
             # This is a main Task
             qs = TaskModel.objects.filter(parent_task_id=obj.pk)
-            context = {
-                'sub_tasks': qs
-            }
+            context = {"sub_tasks": qs}
 
         return render_to_string(
-            template_name='admin/huey_monitor/taskmodel/task_hierarchy_info.html',
+            template_name="admin/huey_monitor/taskmodel/task_hierarchy_info.html",
             context=context,
         )
 
-    task_hierarchy_info.short_description = _('Task hierarchy')
+    task_hierarchy_info.short_description = _("Task hierarchy")
 
     def has_change_permission(self, request, obj=None):
         return False
 
     def signals(self, obj):
-        signals = SignalInfoModel.objects.filter(task_id=obj.pk).order_by('-create_dt')
+        signals = SignalInfoModel.objects.filter(task_id=obj.pk).order_by("-create_dt")
         context = {
-            'task': obj,
-            'signals': signals,
+            "task": obj,
+            "signals": signals,
         }
-        return render_to_string('admin/huey_monitor/taskmodel/field_signals.html', context)
+        return render_to_string(
+            "admin/huey_monitor/taskmodel/field_signals.html", context
+        )
 
     def duration(self, obj):
         if not obj.state:
-            return '-'
+            return "-"
 
-        if obj.state.signal_name == 'executing':
+        if obj.state.signal_name == "executing":
             end_dt = timezone.now()
         else:
             end_dt = obj.state.create_dt
@@ -79,51 +74,52 @@ class TaskModelAdmin(admin.ModelAdmin):
         return human_duration(obj.create_dt, end_dt)
 
     list_display = (
-        'human_update_dt',
-        'column_name',
-        'state',
-        'total',
-        'human_unit',
-        'human_percentage',
-        'human_progress',
-        'human_throughput',
-        'duration'
+        "human_update_dt",
+        "column_name",
+        "state",
+        "total",
+        "human_unit",
+        "human_percentage",
+        "human_progress",
+        "human_throughput",
+        "duration",
     )
     readonly_fields = (
-        'task_id', 'signals', 'create_dt', 'update_dt',
-        'human_percentage',
-        'human_progress',
-        'human_throughput',
+        "task_id",
+        "signals",
+        "create_dt",
+        "update_dt",
+        "human_percentage",
+        "human_progress",
+        "human_throughput",
     )
-    ordering = ('-update_dt',)
+    ordering = ("-update_dt",)
     list_display_links = None
-    list_select_related = ('state',)
-    date_hierarchy = 'create_dt'
-    list_filter = ('name', 'state__signal_name', 'state__hostname')
-    search_fields = ('name', 'state__exception_line', 'state__exception')
+    list_select_related = ("state",)
+    date_hierarchy = "create_dt"
+    list_filter = ("name", "state__signal_name", "state__hostname")
+    search_fields = ("name", "state__exception_line", "state__exception")
     fieldsets = (
-        (_('Meta'), {'fields': ('task_id', 'create_dt', 'update_dt')}),
+        (_("Meta"), {"fields": ("task_id", "create_dt", "update_dt")}),
         (
-            _('Task Information'),
+            _("Task Information"),
             {
-                'fields': (
-                    'name',
-                    'desc',
-                    'state',
-                    'progress_count',
-                    'cumulate_progress',
-                    'human_progress_string',
-                    'signals',
+                "fields": (
+                    "name",
+                    "desc",
+                    "state",
+                    "progress_count",
+                    "cumulate_progress",
+                    "human_progress_string",
+                    "signals",
                 )
             },
         ),
-        (_('Hierarchy'), {'fields': ('task_hierarchy_info',)}),
+        (_("Hierarchy"), {"fields": ("task_hierarchy_info",)}),
     )
 
     class Media:
-        css = {
-            'all': ('huey_monitor.css',)
-        }
+        css = {"all": ("huey_monitor.css",)}
 
 
 @admin.register(SignalInfoModel)
@@ -132,20 +128,20 @@ class SignalInfoModelAdmin(admin.ModelAdmin):
         return obj.task.name
 
     list_display = (
-        'create_dt',
-        'task_name',
-        '__str__',
-        'progress_count',
-        'hostname',
-        'pid',
-        'thread',
+        "create_dt",
+        "task_name",
+        "__str__",
+        "progress_count",
+        "hostname",
+        "pid",
+        "thread",
     )
-    readonly_fields = ('create_dt',)
-    list_display_links = ('task_name',)
-    ordering = ('-create_dt',)
-    date_hierarchy = 'create_dt'
-    list_filter = ('task__name', 'signal_name', 'hostname')
-    search_fields = ('task__name', 'exception_line', 'exception')
+    readonly_fields = ("create_dt",)
+    list_display_links = ("task_name",)
+    ordering = ("-create_dt",)
+    date_hierarchy = "create_dt"
+    list_filter = ("task__name", "signal_name", "hostname")
+    search_fields = ("task__name", "exception_line", "exception")
 
     def has_change_permission(self, request, obj=None):
         return False

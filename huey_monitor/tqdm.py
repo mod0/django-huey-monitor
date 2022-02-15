@@ -15,15 +15,17 @@ class ProcessInfo:
     Simple helper inspired by tqdm ;)
     """
 
-    def __init__(self,
-                 task, *,
-                 desc=None,
-                 total=None,
-                 unit='it',
-                 unit_divisor=1000,
-                 parent_task_id=None,
-                 cumulate2parents=True,  # deprecated see #57
-                 ):
+    def __init__(
+        self,
+        task,
+        *,
+        desc=None,
+        total=None,
+        unit="it",
+        unit_divisor=1000,
+        parent_task_id=None,
+        cumulate2parents=True,  # deprecated see #57
+    ):
         """
         Parameters
         ----------
@@ -38,9 +40,11 @@ class ProcessInfo:
                   this option will be removed in the future, see:
                   https://github.com/boxine/django-huey-monitor/discussions/57
         """
-        assert isinstance(task, Task), f'No task given: {task!r} (Hint: use "context=True")'
+        assert isinstance(
+            task, Task
+        ), f'No task given: {task!r} (Hint: use "context=True")'
         self.task = task
-        self.desc = desc or ''
+        self.desc = desc or ""
         self.total = total
         self.unit = unit
         self.unit_divisor = unit_divisor
@@ -51,8 +55,8 @@ class ProcessInfo:
             # description will raise a database error and maybe a user doesn't know
             # what's happen ;)
             raise ValidationError(
-                'Process info description overlong: %(desc)r',
-                params={'desc': self.desc},
+                "Process info description overlong: %(desc)r",
+                params={"desc": self.desc},
             )
 
         TaskModel.objects.filter(task_id=task.id).update(
@@ -66,7 +70,7 @@ class ProcessInfo:
 
         self.total_progress = 0
 
-        logger.info('Init TaskModel %s', self)
+        logger.info("Init TaskModel %s", self)
 
     def update(self, n=1):
         """
@@ -83,6 +87,6 @@ class ProcessInfo:
 
     def __str__(self):
         return (
-            f'{self.task.name} - {self.desc} {self.total_progress}/{self.total}{self.unit}'
-            f' (divisor: {self.unit_divisor})'
+            f"{self.task.name} - {self.desc} {self.total_progress}/{self.total}{self.unit}"
+            f" (divisor: {self.unit_divisor})"
         )

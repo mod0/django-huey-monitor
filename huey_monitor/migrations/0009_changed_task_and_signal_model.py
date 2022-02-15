@@ -6,43 +6,61 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('huey_monitor', '0008_delete_taskprogressmodel'),
+        ("huey_monitor", "0008_delete_taskprogressmodel"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='signalinfomodel',
-            name='exception_line',
-            field=models.TextField(blank=True, default='', verbose_name='Exception Line'),
+            model_name="signalinfomodel",
+            name="exception_line",
+            field=models.TextField(
+                blank=True, default="", verbose_name="Exception Line"
+            ),
         ),
         migrations.AlterField(
-            model_name='signalinfomodel',
-            name='hostname',
-            field=models.TextField(help_text='Hostname of the machine that creates this Signal', verbose_name='Hostname'),
+            model_name="signalinfomodel",
+            name="hostname",
+            field=models.TextField(
+                help_text="Hostname of the machine that creates this Signal",
+                verbose_name="Hostname",
+            ),
         ),
         migrations.AlterField(
-            model_name='signalinfomodel',
-            name='signal_name',
-            field=models.TextField(help_text='Name of the signal', verbose_name='Signal Name'),
+            model_name="signalinfomodel",
+            name="signal_name",
+            field=models.TextField(
+                help_text="Name of the signal", verbose_name="Signal Name"
+            ),
         ),
         migrations.AlterField(
-            model_name='signalinfomodel',
-            name='thread',
-            field=models.TextField(help_text='Name of the thread that creates this Signal', verbose_name='Thread Name'),
+            model_name="signalinfomodel",
+            name="thread",
+            field=models.TextField(
+                help_text="Name of the thread that creates this Signal",
+                verbose_name="Thread Name",
+            ),
         ),
         migrations.AlterField(
-            model_name='taskmodel',
-            name='desc',
-            field=models.TextField(blank=True, default='', help_text='Prefix for progress information', verbose_name='Description'),
+            model_name="taskmodel",
+            name="desc",
+            field=models.TextField(
+                blank=True,
+                default="",
+                help_text="Prefix for progress information",
+                verbose_name="Description",
+            ),
         ),
         migrations.AlterField(
-            model_name='taskmodel',
-            name='name',
-            field=models.TextField(verbose_name='Task name'),
+            model_name="taskmodel",
+            name="name",
+            field=models.TextField(verbose_name="Task name"),
         ),
         migrations.AlterField(
-            model_name='taskmodel',
-            name='unit',
-            field=models.TextField(default='it', help_text='String that will be used to define the unit of each iteration'),
+            model_name="taskmodel",
+            name="unit",
+            field=models.TextField(
+                default="it",
+                help_text="String that will be used to define the unit of each iteration",
+            ),
         ),
     ]

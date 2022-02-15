@@ -25,22 +25,22 @@ def get_hostname():
 
 def update_task_instance(instance, last_signal, task_finished):
     instance.state_id = last_signal.pk
-    update_fields = ['state_id']
+    update_fields = ["state_id"]
     if task_finished:
         instance.finished = True
-        update_fields.append('finished')
+        update_fields.append("finished")
 
         if instance.cumulate_progress:
             # Progress of the sub tasks should be added up and saved in the parent task
             if instance.parent_task_id is None:
                 # This is the main task -> collect process count
-                qs = TaskModel.objects.filter(parent_task_id=instance.task_id).aggregate(
-                    Sum('progress_count')
-                )
-                progress_count = qs['progress_count__sum']
+                qs = TaskModel.objects.filter(
+                    parent_task_id=instance.task_id
+                ).aggregate(Sum("progress_count"))
+                progress_count = qs["progress_count__sum"]
                 if progress_count is not None:
                     instance.progress_count = progress_count
-                    update_fields.append('progress_count')
+                    update_fields.append("progress_count")
 
     instance.save(update_fields=update_fields)
 
@@ -55,31 +55,32 @@ def store_signals(signal, task, exc=None):
     # Task no longer waits or run?
     task_finished = signal in ENDED_HUEY_SIGNALS
 
-    logger.info('Store Task %s signal %r (finished: %s)', task_id, signal, task_finished)
+    logger.info(
+        "Store Task %s signal %r (finished: %s)", task_id, signal, task_finished
+    )
 
     signal_kwargs = {
         # TODO: move parts into huey_monitor.models.SignalInfoManager
-        'hostname': get_hostname(),
-        'pid': os.getpid(),
-        'thread': threading.current_thread().name,
-        'signal_name': signal,
+        "hostname": get_hostname(),
+        "pid": os.getpid(),
+        "thread": threading.current_thread().name,
+        "signal_name": signal,
     }
 
     if exc is not None:
-        signal_kwargs['exception_line'] = str(exc)
-        signal_kwargs['exception'] = ''.join(
+        signal_kwargs["exception_line"] = str(exc)
+        signal_kwargs["exception"] = "".join(
             traceback.format_exception(*sys.exc_info())
         )
 
     with transaction.atomic():
         task_model_instance, created = TaskModel.objects.get_or_create(
-            task_id=task_id,
-            defaults={'name': task.name}
+            task_id=task_id, defaults={"name": task.name}
         )
 
-        signal_kwargs['task'] = task_model_instance
+        signal_kwargs["task"] = task_model_instance
         if task_model_instance.progress_count is not None:
-            signal_kwargs['progress_count'] = task_model_instance.progress_count
+            signal_kwargs["progress_count"] = task_model_instance.progress_count
 
         last_signal = SignalInfoModel.objects.create(**signal_kwargs)
 
@@ -104,19 +105,21 @@ def startup_handler():
 
     See also: https://github.com/coleifer/huey/issues/569
     """
-    logger.debug('startup handler called')
+    logger.debug("startup handler called")
 
     with transaction.atomic():
-        qs = TaskModel.objects.filter(state__signal_name='executing')
+        qs = TaskModel.objects.filter(state__signal_name="executing")
         for task_model_instance in qs:
-            logger.warning('Mark "executing" task %s to "unknown"', task_model_instance.pk)
+            logger.warning(
+                'Mark "executing" task %s to "unknown"', task_model_instance.pk
+            )
             last_signal = SignalInfoModel.objects.create(
                 # TODO: move parts into huey_monitor.models.SignalInfoManager
                 hostname=get_hostname(),
                 pid=os.getpid(),
                 thread=threading.current_thread().name,
                 task_id=task_model_instance.pk,
-                signal_name='unknown',
+                signal_name="unknown",
                 progress_count=task_model_instance.progress_count,
             )
             update_task_instance(

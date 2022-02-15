@@ -15,10 +15,10 @@ PACKAGE_ROOT = Path(huey_monitor.__file__).parent.parent
 
 def publish():
     """
-        Publish to PyPi
-        Call this via:
-            $ poetry run publish
+    Publish to PyPi
+    Call this via:
+        $ poetry run publish
     """
-    verbose_check_call('make', 'pytest')  # don't publish if tests fail
+    verbose_check_call("make", "pytest")  # don't publish if tests fail
 
     poetry_publish(package_root=PACKAGE_ROOT, version=huey_monitor.__version__)

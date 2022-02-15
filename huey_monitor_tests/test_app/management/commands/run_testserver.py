@@ -1,7 +1,9 @@
 import os
 
 from django.contrib.auth import get_user_model
-from django.contrib.staticfiles.management.commands.runserver import Command as RunServerCommand
+from django.contrib.staticfiles.management.commands.runserver import (
+    Command as RunServerCommand,
+)
 from django.core.management import call_command
 
 
@@ -9,6 +11,7 @@ class Command(RunServerCommand):
     """
     Expand django.contrib.staticfiles runserver
     """
+
     help = "Setup test project and run django developer server"
 
     def verbose_call(self, command, *args, **kwargs):
@@ -32,19 +35,19 @@ class Command(RunServerCommand):
             self.verbose_call("collectstatic", interactive=False, link=True)
 
             User = get_user_model()
-            user, created = User.objects.get_or_create(username='test')
+            user, created = User.objects.get_or_create(username="test")
             user.is_active = True
             user.is_staff = True
             user.is_superuser = True
             if created:
-                user.set_password('test123')
+                user.set_password("test123")
             user.save()
 
-        print('\n')
-        print('_' * 100)
-        print('Test super user:')
+        print("\n")
+        print("_" * 100)
+        print("Test super user:")
         print(' * username: "test"')
         print(' * password: "test123"')
-        print('\n')
+        print("\n")
 
         super().handle(*args, **options)

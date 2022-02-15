@@ -9,32 +9,36 @@ def move_progress_count(apps, schema_editor):
     Collect all "progress_count" from TaskProgressModel
     and store it into TaskModel and the last SignalInfoModel
     """
-    SignalInfoModel = apps.get_model('huey_monitor', 'SignalInfoModel')
-    TaskProgressModel = apps.get_model('huey_monitor', 'TaskProgressModel')
-    TaskModel = apps.get_model('huey_monitor', 'TaskModel')
+    SignalInfoModel = apps.get_model("huey_monitor", "SignalInfoModel")
+    TaskProgressModel = apps.get_model("huey_monitor", "TaskProgressModel")
+    TaskModel = apps.get_model("huey_monitor", "TaskModel")
     for task in TaskModel.objects.all():
         qs = TaskProgressModel.objects.filter(task_id=task.task_id).aggregate(
-            Sum('progress_count'),
+            Sum("progress_count"),
         )
-        progress_count = qs['progress_count__sum']
+        progress_count = qs["progress_count__sum"]
         if progress_count is not None:
             task.progress_count = progress_count
-            task.save(update_fields=('progress_count',))
+            task.save(update_fields=("progress_count",))
 
             last_signal = (
-                SignalInfoModel.objects.order_by('-create_dt').filter(task_id=task.task_id).first()
+                SignalInfoModel.objects.order_by("-create_dt")
+                .filter(task_id=task.task_id)
+                .first()
             )
             if last_signal:
                 last_signal.progress_count = progress_count
-                last_signal.save(update_fields=('progress_count',))
+                last_signal.save(update_fields=("progress_count",))
 
 
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('huey_monitor', '0006_add_progress_count'),
+        ("huey_monitor", "0006_add_progress_count"),
     ]
 
     operations = [
-        migrations.RunPython(move_progress_count, reverse_code=migrations.RunPython.noop),
+        migrations.RunPython(
+            move_progress_count, reverse_code=migrations.RunPython.noop
+        ),
     ]

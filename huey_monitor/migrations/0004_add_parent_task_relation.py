@@ -7,13 +7,22 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('huey_monitor', '0003_add_meta_fields'),
+        ("huey_monitor", "0003_add_meta_fields"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='taskmodel',
-            name='parent_task',
-            field=models.ForeignKey(blank=True, editable=False, help_text='Only set if this task is a sub task started from his parent.', null=True, on_delete=django.db.models.deletion.CASCADE, related_name='+', to='huey_monitor.taskmodel', verbose_name='Parent Task'),
+            model_name="taskmodel",
+            name="parent_task",
+            field=models.ForeignKey(
+                blank=True,
+                editable=False,
+                help_text="Only set if this task is a sub task started from his parent.",
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="+",
+                to="huey_monitor.taskmodel",
+                verbose_name="Parent Task",
+            ),
         ),
     ]

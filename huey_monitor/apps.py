@@ -3,8 +3,8 @@ from django.utils.translation import gettext_lazy as _
 
 
 class HueyMonitorConfig(AppConfig):
-    name = 'huey_monitor'
-    verbose_name = _('Huey Monitor')
+    name = "huey_monitor"
+    verbose_name = _("Huey Monitor")
 
     def ready(self):
         """

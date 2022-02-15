@@ -16,7 +16,7 @@ def generate_filelist(path):
                 elif entry.is_file(follow_symlinks=False):
                     yield entry.path
             except OSError as err:
-                logger.exception('Error with %s: %s', entry, err)
+                logger.exception("Error with %s: %s", entry, err)
                 continue
 
     file_list = list(scan_filesystem(path))

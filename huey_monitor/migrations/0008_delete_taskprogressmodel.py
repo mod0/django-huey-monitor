@@ -6,11 +6,11 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('huey_monitor', '0007_data_migration'),
+        ("huey_monitor", "0007_data_migration"),
     ]
 
     operations = [
         migrations.DeleteModel(
-            name='TaskProgressModel',
+            name="TaskProgressModel",
         ),
     ]
