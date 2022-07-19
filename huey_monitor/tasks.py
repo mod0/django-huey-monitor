@@ -108,7 +108,7 @@ def startup_handler():
     logger.debug("startup handler called")
 
     with transaction.atomic():
-        qs = TaskModel.objects.filter(state__signal_name="executing")
+        qs = TaskModel.objects.select_for_update(skip_locked=True).filter(state__signal_name="executing")
         for task_model_instance in qs:
             logger.warning(
                 'Mark "executing" task %s to "unknown"', task_model_instance.pk
